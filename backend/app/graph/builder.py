@@ -46,11 +46,24 @@ def build_graph(
         )
 
     graph = StateGraph(GraphState)
+    def retry(state: GraphState) -> dict:
+        return {
+            "retries": state["retries"] + 1,
+            "steps": [{"node": "retry", "detail": "one more pass"}],
+        }
+
+    def after_critic(state: GraphState) -> str:
+        if state["accepted"] or state["retries"] >= 1:
+            return "done"
+        return "again"
+
     graph.add_node("planner", planner)
     graph.add_node("worker", worker)
     graph.add_node("critic", critique_node)
+    graph.add_node("retry", retry)
     graph.add_edge(START, "planner")
     graph.add_edge("planner", "worker")
     graph.add_edge("worker", "critic")
-    graph.add_edge("critic", END)
+    graph.add_conditional_edges("critic", after_critic, {"again": "retry", "done": END})
+    graph.add_edge("retry", "worker")
     return graph.compile(name="forge-orchestrator")

@@ -41,7 +41,7 @@ flowchart TD
 
 The worker depends on `ToolClient` and `Retriever`, not on a server class or SQL. The API's client is `StdioToolClient`: one stdio session per MCP server. `InProcessToolClient` remains for fast tests and calls the same `TOOLS` functions the servers register.
 
-Retrieval embeds the query with a local MiniLM model (384 dimensions, L2-normalized), takes cosine neighbors from pgvector and keyword hits from Postgres full text, and merges them with reciprocal rank fusion. `HashingEmbedder` remains in the repo as the older method. `sql_query` runs a read-only SELECT on the Postgres orders, docs, and cases tables. Search, files, and HTTP stay fixtures. If Postgres is down, health is `degraded` and retrieval returns `ok: false`.
+Retrieval embeds the query with a local MiniLM model (384 dimensions, L2-normalized), takes cosine neighbors from pgvector and keyword hits from Postgres full text, and merges them with reciprocal rank fusion. `HashingEmbedder` remains in the repo as the older method. `sql_query` runs a read-only SELECT on the Postgres orders, docs, and cases tables. The HTTP routes read those same rows. Search and files stay fixtures. A refusal runs the worker one more time, then stays refused. If Postgres is down, health is `degraded` and retrieval returns `ok: false`.
 
 ## Add an MCP server
 

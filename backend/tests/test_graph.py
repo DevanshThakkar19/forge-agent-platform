@@ -52,3 +52,5 @@ def test_graph_rejects_tool_failure(tmp_path: Path) -> None:
     assert outcome.final.confidence == STUB_REJECT_CONFIDENCE
     assert [item.ok for item in outcome.final.tool_calls_summary] == [True, False]
     assert outcome.critic_notes.startswith("rejected:")
+    assert [step["node"] for step in outcome.steps].count("critic") == 2
+    assert [step["detail"] for step in outcome.steps].count("one more pass") == 1

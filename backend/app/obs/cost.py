@@ -9,5 +9,5 @@ from __future__ import annotations
 ESTIMATED_USD_PER_TASK = 0.0
 COST_BASIS = (
     "no paid model or search API; local MiniLM embedder; "
-    "sql reads Postgres; search, files, and http stay fixtures; estimate 0 USD per task"
+    "sql and http read Postgres; search and files stay fixtures; estimate 0 USD per task"
 )

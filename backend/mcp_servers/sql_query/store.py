@@ -33,13 +33,32 @@ def database_url() -> str:
 
 
 def fetch_rows(statement: str) -> list[dict[str, Any]]:
+    return _read(statement, ())
+
+
+def lookup_order(order_id: int) -> dict[str, Any] | None:
+    rows = _read("SELECT id, status, total FROM orders WHERE id = %s", (order_id,))
+    return rows[0] if rows else None
+
+
+def lookup_doc(doc_id: str) -> dict[str, Any] | None:
+    rows = _read("SELECT id, title, body FROM docs WHERE id = %s", (doc_id,))
+    return rows[0] if rows else None
+
+
+def lookup_case(case_id: int) -> dict[str, Any] | None:
+    rows = _read("SELECT id, status, detail FROM cases WHERE id = %s", (case_id,))
+    return rows[0] if rows else None
+
+
+def _read(statement: str, params: tuple[Any, ...]) -> list[dict[str, Any]]:
     with psycopg.connect(database_url(), connect_timeout=2, row_factory=dict_row) as conn:
         conn.autocommit = True
         _ensure(conn)
         conn.autocommit = False
         conn.execute("SET TRANSACTION READ ONLY")
         conn.execute("SET LOCAL statement_timeout = '2s'")
-        fetched = conn.execute(statement).fetchall()
+        fetched = conn.execute(statement, params).fetchall()
         conn.rollback()
     return [{key: _plain(value) for key, value in row.items()} for row in fetched]
 

@@ -21,7 +21,7 @@ run:
 	cd backend && ../$(PYTHON) -m uvicorn app.main:create_app --factory --reload --host 127.0.0.1 --port 8000
 
 eval:
-	cd backend && ../$(PYTHON) -m app.evals.runner --label v2 --out evals/baselines/v2.json --publish evals/baselines/current.json
+	cd backend && ../$(PYTHON) -m app.evals.runner --label v3 --out evals/baselines/v3.json --publish evals/baselines/current.json
 
 ui:
 	cd frontend && npm run dev

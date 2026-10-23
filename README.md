@@ -41,21 +41,23 @@ Module rules: [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md). Metric formulas: [do
 - Hybrid retrieval over `backend/corpus`: a local MiniLM embedding (384 dimensions) into pgvector, Postgres full text, reciprocal rank fusion, citations on the answer
 - Promote gate on `mode=promote` and `mode=prod`
 
-Search, the file sandbox, and the HTTP routes are fixtures. They do not hit the network. `sql_query` runs one read-only SELECT against the Postgres `orders`, `docs`, and `cases` tables. Nothing on this path calls a paid API. The critic accepts a run only when every planned call succeeds, at least one citation comes back, and every query term of 5 or more characters appears in that evidence. A file the agent just wrote does not count as evidence. Critic `confidence` is still a self-score, not the golden-set faithfulness number.
+Search and the file sandbox are fixtures. They do not hit the network. `sql_query` runs one read-only SELECT against the Postgres `orders`, `docs`, and `cases` tables, and the HTTP routes read those same rows. Nothing on this path calls a paid API. The critic accepts a run only when every planned call succeeds, at least one citation comes back, and every query term of 5 or more characters appears in that evidence. A rejection gets one more pass over the same plan, then stays refused when the record is still missing. A file the agent just wrote does not count as evidence. Critic `confidence` is still a self-score, not the golden-set faithfulness number.
 
 ## Metrics
 
 Golden set N=40, runtime `inprocess+memory`. Formulas and the gate are in [docs/EVAL_PROTOCOL.md](docs/EVAL_PROTOCOL.md). These clocks are the in-process runner, not a production p95. External cost is an estimate of $0 because there is no paid model.
 
-| Metric | v0 | v1 | current (v2) |
-| --- | --- | --- | --- |
-| p95 latency | 0.801 ms | 0.892 ms | 15.744 ms |
-| Faithfulness | 0.8136 | 1.0 | 1.0 |
-| Tool success | 1.0 | 1.0 | 1.0 |
-| Decision accuracy | 0.875 | 1.0 | 1.0 |
-| USD / successful task | 0 | 0 | 0 |
+| Metric | v0 | v1 | v2 | current (v3) |
+| --- | --- | --- | --- | --- |
+| p95 latency | 0.801 ms | 0.892 ms | 15.744 ms | 25.057 ms |
+| Faithfulness | 0.8136 | 1.0 | 1.0 | 1.0 |
+| Tool success | 1.0 | 1.0 | 1.0 | 1.0 |
+| Decision accuracy | 0.875 | 1.0 | 1.0 | 1.0 |
+| USD / successful task | 0 | 0 | 0 | 0 |
 
-v0 fails the promote gate. v1 and v2 pass. v1 is the hashing embedder, measured 2026-10-21, and that clock is under 1 ms. v2 is the local MiniLM embedder plus the live SQL tool, measured 2026-10-23. p95 got slower. Recompute with `make eval`.
+v0 fails the promote gate. v1, v2, and v3 pass. v1 is the hashing embedder, measured 2026-10-21, and that clock is under 1 ms. v2 is the local MiniLM embedder plus the live SQL tool. v3 adds Postgres-backed HTTP routes and one critic retry. p95 got slower again, because a refusal runs the plan a second time. Recompute with `make eval`.
+
+One request to the public desk on 2026-10-23, `Where is order 1001?`, took 1289 ms inside the service and about 1.6 seconds including the network. That is one request, not a percentile.
 
 ## Quickstart
 
@@ -135,7 +137,7 @@ backend/corpus         markdown the retriever indexes
 backend/app/evals      golden-set scoring and the promote gate
 backend/app/obs        per-run cost label (external spend is 0)
 backend/mcp_servers    four stdio MCP servers
-backend/evals          golden_set.jsonl and baselines/v0.json, v1.json, v2.json, current.json
+backend/evals          golden_set.jsonl and baselines/v0.json, v1.json, v2.json, v3.json, current.json
 docs                   architecture and eval protocol
 frontend               React run panel and metrics page
 ```
@@ -157,4 +159,4 @@ See `.env.example`. `FORGE_API_KEY` defaults to `dev-api-key` for local runs. Ch
 
 ## Status of the definition of done
 
-Compose, the four tools, cited retrieval, the promote gate, the golden-set table, and GitHub Actions are in place. `sql_query` reads the Postgres orders and cases tables. Retrieval uses a local MiniLM model. The published v2 clock is the in-process runner, p95 15.744 ms, slower than v1, and it is not a production p95. A stranger can open [forge-desk.onrender.com](https://forge-desk.onrender.com). That service sleeps after idle, uses the keyword planner, and runs the tool functions in-process. Four extra Python processes do not fit beside MiniLM and Postgres in 512 MB. Compose on this machine still uses stdio. The critic refuses an unsupported answer and does not retry the question.
+Compose, the four tools, cited retrieval, the promote gate, the golden-set table, and GitHub Actions are in place. `sql_query` reads the Postgres orders and cases tables. Retrieval uses a local MiniLM model. The published v3 clock is the in-process runner, p95 25.057 ms, slower than v2, and it is not a production p95. A stranger can open [forge-desk.onrender.com](https://forge-desk.onrender.com). That service sleeps after idle, uses the keyword planner, and runs the tool functions in-process. Four extra Python processes do not fit beside MiniLM and Postgres in 512 MB. Compose on this machine still uses stdio. The critic refuses an unsupported answer after one more pass. Search and files stay fixtures.

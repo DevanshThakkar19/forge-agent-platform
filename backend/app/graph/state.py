@@ -31,3 +31,4 @@ class GraphState(TypedDict):
     accepted: bool
     critic_notes: str
     final: dict[str, Any]
+    retries: int

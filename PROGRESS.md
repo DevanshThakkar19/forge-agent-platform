@@ -146,5 +146,11 @@ A Fly app was created and then destroyed the same day. A machine that stays on c
 
 Pytest: 42 passed. Ruff clean. A local copy of the free-host image answered order 1001 from `sql:orders`, case 4401 from `sql:cases`, and refused `order a pizza`. That image runs the tools in-process so MiniLM and Postgres fit in 512 MB. Compose on this machine still uses stdio.
 
-The free Render service is [forge-desk.onrender.com](https://forge-desk.onrender.com), plan free, Ohio. Checked after the first deploy: health `ok`, database `ok`, planner `keyword`, order 1001 cited `sql:orders`, case 4401 cited `sql:cases`, and `order a pizza` was refused. The service sleeps when idle.
+The free Render service is [forge-desk.onrender.com](https://forge-desk.onrender.com), plan free, Ohio. Checked after the first deploy: health `ok`, database `ok`, planner `keyword`, order 1001 cited `sql:orders`, case 4401 cited `sql:cases`, and `order a pizza` was refused. The service sleeps when idle. One measured request that day, `Where is order 1001?`, took 1289 ms inside the service and about 1.6 seconds including the network. That is one request, not a percentile.
+
+## 2026-10-23 — Postgres HTTP routes and one retry
+
+`http_get` reads `/orders/{id}`, `/docs/{id}`, and `/cases/{id}` from the same Postgres tables as `sql_query`. Search and files stay fixtures. A refusal runs the worker once more, then stays refused.
+
+`make eval` wrote `evals/baselines/v3.json` and copied it to `current.json`. Faithfulness 1.0, decision accuracy 1.0, tool success 1.0, p50 4.367 ms, p95 25.057 ms, gate pass, cost $0. p95 is slower than v2 (15.744 ms) because refusals take a second pass. The public planner and MiniLM are unchanged. v2.json is kept.
 

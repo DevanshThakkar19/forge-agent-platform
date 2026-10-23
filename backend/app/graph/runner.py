@@ -27,6 +27,7 @@ def run_graph(graph: Any, *, query: str, mode: str) -> GraphOutcome:
             "accepted": False,
             "critic_notes": "",
             "final": {},
+            "retries": 0,
         }
     )
     return GraphOutcome(

@@ -49,8 +49,19 @@ def test_http_get_known_and_unknown_routes() -> None:
     found = http_get("/orders/1001")
     assert found["ok"] is True
     assert found["body"]["status"] == "shipped"
+    other = http_get("/orders/1002")
+    assert other["ok"] is True
+    assert other["body"]["status"] == "processing"
+    case = http_get("/cases/4401")
+    assert case["ok"] is True
+    assert "Brightmill" in case["citations"][0]["excerpt"]
+    docs = http_get("/docs/overview")
+    assert docs["ok"] is True
+    assert "Planner" in docs["citations"][0]["excerpt"]
     missing = http_get("/admin")
     assert missing["ok"] is False
+    unknown = http_get("/orders/9999")
+    assert unknown["ok"] is False
     escaped = http_get("/orders/../../etc/passwd")
     assert escaped["ok"] is False
 
