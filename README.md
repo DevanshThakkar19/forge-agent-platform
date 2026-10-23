@@ -2,7 +2,7 @@
 
 Multi-agent platform: a LangGraph planner, worker, and critic over four MCP tool servers, with hybrid retrieval in Postgres and pgvector, behind FastAPI.
 
-Live demo: `http://127.0.0.1:8080` after `docker compose up --build`. `make tunnel` publishes that port through a free Cloudflare quick tunnel. The hostname changes every start, and the page stays up only while this Mac and that process are running. There is no paid host.  
+Live demo: [forge-desk.onrender.com](https://forge-desk.onrender.com). This is the Render free tier. It sleeps after about 15 minutes idle, and the first open after that takes about a minute. The public copy uses the keyword planner. Postgres and the records live inside that container, so a restart reloads them. There is no paid host. Locally, `http://127.0.0.1:8080` after `docker compose up --build`. `make tunnel` publishes that port only while this Mac is awake.  
 Stack: LangGraph · MCP · pgvector · FastAPI · React · Docker.
 
 Devansh Thakkar · thakkar.devan@northeastern.edu · [github.com/DevanshThakkar19](https://github.com/DevanshThakkar19)
@@ -157,4 +157,4 @@ See `.env.example`. `FORGE_API_KEY` defaults to `dev-api-key` for local runs. Ch
 
 ## Status of the definition of done
 
-Compose, the four tools, cited retrieval, the promote gate, the golden-set table, and GitHub Actions are in place. `sql_query` reads the Postgres orders and cases tables. Retrieval uses a local MiniLM model. The published v2 clock is the in-process runner, p95 15.744 ms, slower than v1, and it is not a production p95. A stranger can open the desk through the free tunnel while this Mac is awake, or on the Render free service once that URL is listed above. That service sleeps after idle, uses the keyword planner, and runs the tool functions in-process. Four extra Python processes do not fit beside MiniLM and Postgres in 512 MB. Compose on this machine still uses stdio. The critic refuses an unsupported answer and does not retry the question.
+Compose, the four tools, cited retrieval, the promote gate, the golden-set table, and GitHub Actions are in place. `sql_query` reads the Postgres orders and cases tables. Retrieval uses a local MiniLM model. The published v2 clock is the in-process runner, p95 15.744 ms, slower than v1, and it is not a production p95. A stranger can open [forge-desk.onrender.com](https://forge-desk.onrender.com). That service sleeps after idle, uses the keyword planner, and runs the tool functions in-process. Four extra Python processes do not fit beside MiniLM and Postgres in 512 MB. Compose on this machine still uses stdio. The critic refuses an unsupported answer and does not retry the question.
