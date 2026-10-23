@@ -1,23 +1,20 @@
-"""Read-only SQL against a tiny in-memory demo schema. No database connection."""
+"""Read-only SQL against the Postgres orders, docs, and cases tables."""
 
 from __future__ import annotations
 
 import json
+import logging
 from typing import Any
 
 from mcp_servers.common.results import citation, fail, ok
 from mcp_servers.sql_query.guard import demo_table, normalize_select
+from mcp_servers.sql_query.store import fetch_rows
 
-_ORDERS = (
-    {"id": 1001, "status": "shipped", "total": "42.00"},
-    {"id": 1002, "status": "processing", "total": "15.50"},
-)
-_DOCS = ({"id": "overview", "title": "Forge overview", "body": "Planner, worker, and critic."},)
-_TABLES = {"orders": _ORDERS, "docs": _DOCS}
+logger = logging.getLogger(__name__)
 
 
 def sql_query(sql: str) -> dict[str, Any]:
-    """Run a single read-only SELECT against the demo orders or docs table."""
+    """Run one read-only SELECT. Search, files, and HTTP stay fixtures."""
     try:
         statement = normalize_select(sql)
         table = demo_table(statement)
@@ -27,7 +24,12 @@ def sql_query(sql: str) -> dict[str, Any]:
     if table is None:
         return ok(sql=statement, rows=[], citations=[])
 
-    rows = list(_TABLES[table])
+    try:
+        rows = fetch_rows(statement)
+    except Exception:
+        logger.warning("sql query failed", exc_info=True)
+        return fail("database unavailable")
+
     excerpt = json.dumps(rows[:2], separators=(",", ":"))
     cited = citation(f"sql:{table}", excerpt)
     citations = [cited] if cited is not None else []

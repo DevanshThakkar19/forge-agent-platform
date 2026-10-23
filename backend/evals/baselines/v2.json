@@ -1,0 +1,17 @@
+{
+  "id": "v2",
+  "measured_at": "2026-10-23T20:37:35.406650+00:00",
+  "runtime": "inprocess+memory",
+  "golden_sha256": "f213860a1fb6b7acda5032c6a6de83f23a7bb8d558790afcc513e7ecea70674d",
+  "cost_basis": "no paid model or search API; local MiniLM embedder; sql reads Postgres; search, files, and http stay fixtures; estimate 0 USD per task",
+  "estimated_cost_usd_per_success": 0.0,
+  "tasks": 40,
+  "faithfulness": 1.0,
+  "decision_accuracy": 1.0,
+  "tool_success_rate": 1.0,
+  "latency_p50_ms": 3.39,
+  "latency_p95_ms": 15.744,
+  "gate_passed": true,
+  "gate_reasons": [],
+  "failures": []
+}

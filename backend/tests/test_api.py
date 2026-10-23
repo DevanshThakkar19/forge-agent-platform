@@ -33,13 +33,13 @@ def test_metrics_publish_the_baseline(client: TestClient, auth_header: dict[str,
     assert response.status_code == 200
     body = response.json()
     assert body["status"] == "measured"
-    assert body["baseline_id"] == "v1"
+    assert body["baseline_id"] == "v2"
     assert body["tasks"] == 40
     assert body["faithfulness"] == 1.0
     assert body["decision_accuracy"] == 1.0
     assert body["tool_success_rate"] == 1.0
     assert body["estimated_cost_usd_per_success"] == 0.0
-    assert body["latency_p95_ms"] == 0.892
+    assert body["latency_p95_ms"] == 15.744
     assert "no paid model" in body["note"]
 
 

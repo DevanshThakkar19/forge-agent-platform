@@ -11,7 +11,7 @@ import psycopg
 from pgvector import Vector
 from pgvector.psycopg import register_vector
 
-from app.rag.embed import EMBED_DIM, HashingEmbedder
+from app.rag.embed import EMBED_DIM, Embedder, MiniLMEmbedder
 from app.rag.rank import VECTOR_MIN_COSINE, reciprocal_rank_fusion
 from app.rag.text import shares_support
 from app.rag.types import Hit, RawChunk, chunk_id
@@ -45,7 +45,7 @@ class PgHybridIndex:
     def __init__(
         self,
         database_url: str,
-        embedder: HashingEmbedder | None = None,
+        embedder: Embedder | None = None,
         *,
         schema: str = "public",
         connect_timeout_s: int = 2,
@@ -53,7 +53,7 @@ class PgHybridIndex:
         if not _SCHEMA.fullmatch(schema):
             raise ValueError("invalid schema name")
         self._database_url = database_url
-        self._embedder = embedder or HashingEmbedder()
+        self._embedder = embedder or MiniLMEmbedder()
         self._schema = schema
         self._timeout = connect_timeout_s
         self._chunks = f"{schema}.forge_chunks"

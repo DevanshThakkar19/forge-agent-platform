@@ -17,6 +17,7 @@ from app.graph.understand import resolve_question, understand_prompt
 NOTE_RELATIVE_PATH = "notes/run.txt"
 _ORDERS_SQL = "SELECT id, status, total FROM orders"
 _DOCS_SQL = "SELECT id, title, body FROM docs"
+_CASES_SQL = "SELECT id, status, detail FROM cases"
 _ORDERS_PATH = "/orders/1001"
 _DOCS_PATH = "/docs/overview"
 
@@ -70,16 +71,24 @@ def build_plan(query: str, *, max_steps: int) -> list[PlanStep]:
 
     wants_orders = _has_any(folded, ("order", "orders"))
     wants_docs = _has_any(folded, ("doc", "docs", "documentation"))
+    wants_cases = _has_any(folded, ("case", "cases"))
     use_docs = wants_docs and not wants_orders
+    use_cases = wants_cases and not wants_orders and not wants_docs
 
-    if wants_orders or wants_docs or _has_any(folded, ("sql", "table", "select")):
+    if use_cases or wants_orders or wants_docs or _has_any(folded, ("sql", "table", "select")):
+        if use_cases:
+            sql, reason = _CASES_SQL, "read the cases table"
+        elif use_docs:
+            sql, reason = _DOCS_SQL, "read the docs table"
+        else:
+            sql, reason = _ORDERS_SQL, "read the orders table"
         steps.append(
             _step(
                 "tool",
                 "sql_query",
                 "sql_query",
-                {"sql": _DOCS_SQL if use_docs else _ORDERS_SQL},
-                "read the demo docs table" if use_docs else "read the demo orders table",
+                {"sql": sql},
+                reason,
             )
         )
 
@@ -117,18 +126,19 @@ Reply with JSON only, shaped as {{"tools": []}}.
 Allowed values:
 - sql_orders and http_orders: an order, an order id, or the orders table
 - sql_docs and http_docs: documentation, an overview, a writeup, or how the desk works
+- sql_cases: a support case or a case id
 - write_note: save, write, keep, record, or note
 Use both names in a pair when that subject comes up.
-Use [] for a case or a company when none of those words apply.
+Use [] for a company when none of those words apply.
 Examples:
 Question: look at the overview writeup
 {{"tools": ["sql_docs", "http_docs"]}}
 Question: keep a record of case 4401
-{{"tools": ["write_note"]}}
+{{"tools": ["sql_cases", "write_note"]}}
 Question: Where is order 1001?
 {{"tools": ["sql_orders", "http_orders"]}}
 Question: What is case 4401?
-{{"tools": []}}
+{{"tools": ["sql_cases"]}}
 Now choose only for this question.
 Question: {query}
 """
@@ -169,7 +179,7 @@ def _optional_step(query: str, name: str) -> PlanStep | None:
             "sql_query",
             "sql_query",
             {"sql": _ORDERS_SQL},
-            "read the demo orders table",
+            "read the orders table",
         )
     if name == "sql_docs":
         return _step(
@@ -177,7 +187,15 @@ def _optional_step(query: str, name: str) -> PlanStep | None:
             "sql_query",
             "sql_query",
             {"sql": _DOCS_SQL},
-            "read the demo docs table",
+            "read the docs table",
+        )
+    if name == "sql_cases":
+        return _step(
+            "tool",
+            "sql_query",
+            "sql_query",
+            {"sql": _CASES_SQL},
+            "read the cases table",
         )
     if name == "http_orders":
         return _step(
@@ -217,7 +235,11 @@ def _steps_from_model(query: str, tools: list[str], *, max_steps: int) -> list[P
     for name in tools:
         if name in chosen:
             continue
-        if name in {"sql_orders", "sql_docs"} and chosen & {"sql_orders", "sql_docs"}:
+        if name in {"sql_orders", "sql_docs", "sql_cases"} and chosen & {
+            "sql_orders",
+            "sql_docs",
+            "sql_cases",
+        }:
             continue
         if name in {"http_orders", "http_docs"} and chosen & {"http_orders", "http_docs"}:
             continue

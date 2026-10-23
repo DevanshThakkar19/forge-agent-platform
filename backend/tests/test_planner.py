@@ -28,6 +28,12 @@ def test_max_steps_caps_the_plan() -> None:
     assert [step["tool"] for step in plan] == ["retrieve"]
 
 
+def test_case_query_reads_the_cases_table() -> None:
+    plan = build_plan("What is case 4401?", max_steps=5)
+    assert plan[2]["arguments"]["sql"] == "SELECT id, status, detail FROM cases"
+    assert "http_get" not in [step["tool"] for step in plan]
+
+
 def test_docs_query_uses_the_docs_fixtures() -> None:
     plan = build_plan("read the docs from sql and the http api", max_steps=5)
     assert plan[2]["arguments"]["sql"] == "SELECT id, title, body FROM docs"

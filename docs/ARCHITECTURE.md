@@ -35,13 +35,13 @@ flowchart TD
 | `app/services` | Run lifecycle and the store | Know HTTP status codes |
 | `app/api` | Routes, auth, status codes | Call tools directly |
 | `app/schemas` | Pydantic contracts | Call tools or the graph |
-| `app/rag` | Chunking, hashing embedder, hybrid rank, pgvector index | Import FastAPI or MCP servers |
+| `app/rag` | Chunking, local MiniLM embedder, hybrid rank, pgvector index | Import FastAPI or MCP servers |
 | `app/evals` | Golden-set loader, scorer, runner, promote gate | Invent a score that the runner did not write |
 | `app/obs` | Cost label for a run | Treat one `elapsed_ms` as a p95, or invent a model bill |
 
 The worker depends on `ToolClient` and `Retriever`, not on a server class or SQL. The API's client is `StdioToolClient`: one stdio session per MCP server. `InProcessToolClient` remains for fast tests and calls the same `TOOLS` functions the servers register.
 
-Retrieval embeds the query with signed feature hashing (384 dimensions, L2-normalized), takes cosine neighbors from pgvector and keyword hits from Postgres full text, and merges them with reciprocal rank fusion. The embedder is not a neural model. Replacing `HashingEmbedder` does not change the worker. If Postgres is down, health is `degraded` and retrieval returns `ok: false`.
+Retrieval embeds the query with a local MiniLM model (384 dimensions, L2-normalized), takes cosine neighbors from pgvector and keyword hits from Postgres full text, and merges them with reciprocal rank fusion. `HashingEmbedder` remains in the repo as the older method. `sql_query` runs a read-only SELECT on the Postgres orders, docs, and cases tables. Search, files, and HTTP stay fixtures. If Postgres is down, health is `degraded` and retrieval returns `ok: false`.
 
 ## Add an MCP server
 

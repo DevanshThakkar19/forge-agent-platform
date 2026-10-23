@@ -1,0 +1,16 @@
+services:
+  - type: web
+    name: forge-desk
+    runtime: docker
+    plan: free
+    region: ohio
+    dockerfilePath: ./deploy/Dockerfile
+    dockerContext: .
+    healthCheckPath: /health
+    envVars:
+      - key: FORGE_PLANNER
+        value: keyword
+      - key: FORGE_API_KEY
+        value: dev-api-key
+      - key: FORGE_TOOL_TRANSPORT
+        value: inprocess

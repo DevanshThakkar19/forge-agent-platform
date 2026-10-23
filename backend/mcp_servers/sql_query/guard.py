@@ -1,4 +1,4 @@
-"""Read-only checks for the demo SQL stub. This does not parse SQL for real."""
+"""Read-only checks before a SELECT is sent to Postgres."""
 
 from __future__ import annotations
 
@@ -27,14 +27,13 @@ def normalize_select(sql: str) -> str:
 
 
 def demo_table(statement: str) -> str | None:
-    """Return ``orders`` or ``docs`` when the statement names exactly one demo table."""
+    """Return the one allowed table named in the statement."""
     folded = statement.lower()
-    has_orders = re.search(r"\borders\b", folded) is not None
-    has_docs = re.search(r"\bdocs\b", folded) is not None
-    if has_orders and has_docs:
-        raise ValueError("query must name one demo table: orders or docs")
-    if has_orders:
-        return "orders"
-    if has_docs:
-        return "docs"
-    return None
+    if re.search(r"\b(pg_\w+|information_schema)\b", folded):
+        raise ValueError("read-only select only")
+    names = [name for name in ("orders", "docs", "cases") if re.search(rf"\b{name}\b", folded)]
+    if len(names) > 1:
+        raise ValueError("query must name one table: orders, docs, or cases")
+    if not names:
+        return None
+    return names[0]

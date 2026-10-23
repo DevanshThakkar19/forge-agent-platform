@@ -44,18 +44,20 @@ CI runs `python -m app.evals.runner --check`, which executes the 5 tasks marked 
 - One run's `elapsed_ms` is not a percentile.
 - A citation proves the retriever or a tool returned that source. The score above is whether that source was on the task's allowed list.
 
-## v0 and v1
+## v0, v1, and v2
 
-Both files were produced by this runner on 2026-10-21 against the same 40 tasks.
+All three files were produced by this runner against the same 40 tasks. v0 and v1 are from 2026-10-21. v2 is from 2026-10-23 and is `current.json`.
 
-|  | v0 | v1 (`current.json`) |
-| --- | --- | --- |
-| Faithfulness | 0.8136 | 1.0 |
-| Decision accuracy | 0.875 | 1.0 |
-| Tool success | 1.0 | 1.0 |
-| p50 latency | 0.533 ms | 0.558 ms |
-| p95 latency | 0.801 ms | 0.892 ms |
-| USD / successful task | 0 | 0 |
-| Gate | fail (decision accuracy) | pass |
+|  | v0 | v1 | v2 (`current.json`) |
+| --- | --- | --- | --- |
+| Faithfulness | 0.8136 | 1.0 | 1.0 |
+| Decision accuracy | 0.875 | 1.0 | 1.0 |
+| Tool success | 1.0 | 1.0 | 1.0 |
+| p50 latency | 0.533 ms | 0.558 ms | 3.39 ms |
+| p95 latency | 0.801 ms | 0.892 ms | 15.744 ms |
+| USD / successful task | 0 | 0 | 0 |
+| Gate | fail (decision accuracy) | pass | pass |
 
-v1 drops citations that do not share a content token with the query, stops the orders search fixture from matching on the words `sql` and `http`, and rejects a run when a query term of 5+ characters is missing from the evidence. Notes the agent just wrote do not count as evidence. p95 did not go down. Both runs are under 1 ms because the tools are in-process fixtures.
+v1 drops citations that do not share a content token with the query, stops the orders search fixture from matching on the words `sql` and `http`, and rejects a run when a query term of 5+ characters is missing from the evidence. Notes the agent just wrote do not count as evidence. v1 p95 did not go down. v0 and v1 are under 1 ms because that embedder was hashing and the tools were in-process fixtures.
+
+v2 swaps the hashing embedder for a local MiniLM model and points `sql_query` at Postgres. Faithfulness, tool success, and decision accuracy stay at 1.0. p95 got slower. The clock is still the in-process runner, not a production p95. Cost stays $0.

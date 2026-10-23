@@ -138,3 +138,11 @@ The repo is [github.com/DevanshThakkar19/forge-agent-platform](https://github.co
 
 A Fly app was created and then destroyed the same day. A machine that stays on can be billed, and this project stays on the free path. The desk runs on this Mac. `make tunnel` is the public link, at no charge, for as long as the Mac and the tunnel process stay up.
 
+## 2026-10-23 — live SQL, MiniLM, and v2
+
+`sql_query` runs the SELECT against Postgres tables `orders`, `docs`, and `cases`. Search, files, and HTTP stay fixtures. Retrieval uses a local all-MiniLM-L6-v2 model through ONNX. The hashing embedder is still in the repo and is no longer the live path.
+
+`make eval` wrote `evals/baselines/v2.json` and copied it to `current.json`. Faithfulness 1.0, decision accuracy 1.0, tool success 1.0, p50 3.39 ms, p95 15.744 ms, gate pass, cost $0. p95 is slower than v1 (0.892 ms). That clock is still the in-process runner, not a production p95.
+
+Pytest: 42 passed. Ruff clean. A local copy of the free-host image answered order 1001 from `sql:orders`, case 4401 from `sql:cases`, and refused `order a pizza`. That image runs the tools in-process so MiniLM and Postgres fit in 512 MB. Compose on this machine still uses stdio.
+

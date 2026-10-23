@@ -35,6 +35,15 @@ def test_sql_query_is_read_only() -> None:
     both = sql_query("SELECT * FROM orders JOIN docs")
     assert both["ok"] is False
 
+    one = sql_query("SELECT id, status, total FROM orders WHERE id = 1002")
+    assert one["ok"] is True
+    assert [row["id"] for row in one["rows"]] == [1002]
+
+    case = sql_query("SELECT id, status, detail FROM cases WHERE id = 4401")
+    assert case["ok"] is True
+    assert case["rows"][0]["status"] == "past due"
+    assert "Brightmill" in case["rows"][0]["detail"]
+
 
 def test_http_get_known_and_unknown_routes() -> None:
     found = http_get("/orders/1001")

@@ -2,15 +2,15 @@
 
 from __future__ import annotations
 
-from app.rag.embed import HashingEmbedder
+from app.rag.embed import Embedder, MiniLMEmbedder
 from app.rag.rank import bm25_ranking, reciprocal_rank_fusion, vector_ranking
 from app.rag.text import shares_support
 from app.rag.types import Hit, RawChunk, StoredChunk, chunk_id
 
 
 class MemoryHybridIndex:
-    def __init__(self, embedder: HashingEmbedder | None = None) -> None:
-        self._embedder = embedder or HashingEmbedder()
+    def __init__(self, embedder: Embedder | None = None) -> None:
+        self._embedder = embedder or MiniLMEmbedder()
         self._chunks: list[StoredChunk] = []
 
     def replace(self, chunks: list[RawChunk]) -> None:
