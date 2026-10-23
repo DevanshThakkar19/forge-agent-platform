@@ -1,0 +1,53 @@
+[project]
+name = "forge-agent-platform"
+version = "0.1.0"
+description = "Forge agent platform: MCP tools, LangGraph orchestration, and eval-gated deploys."
+requires-python = ">=3.11"
+dependencies = [
+    "fastapi>=0.115,<1",
+    "uvicorn[standard]>=0.32,<1",
+    "pydantic>=2.12,<3",
+    "pydantic-settings>=2.6,<3",
+    "langgraph>=1.0,<2",
+    "mcp>=2.3,<3",
+    "psycopg[binary]>=3.2,<4",
+    "pgvector>=0.3,<1",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8,<10",
+    "httpx>=0.27,<1",
+    "ruff>=0.8",
+]
+
+[project.scripts]
+forge-api = "app.main:main"
+forge-mcp-web-search = "mcp_servers.web_search.server:main"
+forge-mcp-sql-query = "mcp_servers.sql_query.server:main"
+forge-mcp-file-store = "mcp_servers.file_store.server:main"
+forge-mcp-http-api = "mcp_servers.http_api.server:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["app", "mcp_servers"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+addopts = "-q"
+
+[tool.ruff]
+target-version = "py311"
+line-length = 100
+src = ["app", "mcp_servers", "tests"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["app", "mcp_servers"]
+known-third-party = ["mcp"]

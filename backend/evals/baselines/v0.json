@@ -1,0 +1,418 @@
+{
+  "id": "v0",
+  "measured_at": "2026-10-21T21:27:06.402954+00:00",
+  "runtime": "inprocess+memory",
+  "golden_sha256": "f213860a1fb6b7acda5032c6a6de83f23a7bb8d558790afcc513e7ecea70674d",
+  "cost_basis": "no paid model or search API; local hashing embedder and fixture tools; estimate 0 USD per task",
+  "estimated_cost_usd_per_success": 0.0,
+  "tasks": 40,
+  "faithfulness": 0.8136,
+  "decision_accuracy": 0.875,
+  "tool_success_rate": 1.0,
+  "latency_p50_ms": 0.533,
+  "latency_p95_ms": 0.801,
+  "gate_passed": false,
+  "gate_reasons": [
+    "decision accuracy 0.8750 < 1.00"
+  ],
+  "failures": [
+    {
+      "id": "ord-001",
+      "faithfulness": 0.9231,
+      "decision_ok": true,
+      "accepted": true,
+      "sources": [
+        "corpus/tools.md",
+        "corpus/orders.md",
+        "corpus/overview.md",
+        "fixture://forge/orders",
+        "sql:orders",
+        "http_api:/orders/1001",
+        "file:notes/run.txt"
+      ],
+      "tools": [
+        "retrieve",
+        "web_search",
+        "sql_query",
+        "http_get",
+        "write_file"
+      ],
+      "critic_notes": "accepted cited evidence"
+    },
+    {
+      "id": "ord-002",
+      "faithfulness": 0.9091,
+      "decision_ok": true,
+      "accepted": true,
+      "sources": [
+        "corpus/orders.md",
+        "corpus/tools.md",
+        "corpus/overview.md",
+        "fixture://forge/orders",
+        "sql:orders",
+        "http_api:/orders/1001"
+      ],
+      "tools": [
+        "retrieve",
+        "web_search",
+        "sql_query",
+        "http_get"
+      ],
+      "critic_notes": "accepted cited evidence"
+    },
+    {
+      "id": "ord-003",
+      "faithfulness": 0.9091,
+      "decision_ok": true,
+      "accepted": true,
+      "sources": [
+        "corpus/orders.md",
+        "corpus/tools.md",
+        "corpus/overview.md",
+        "fixture://forge/orders",
+        "sql:orders",
+        "http_api:/orders/1001"
+      ],
+      "tools": [
+        "retrieve",
+        "web_search",
+        "sql_query",
+        "http_get"
+      ],
+      "critic_notes": "accepted cited evidence"
+    },
+    {
+      "id": "ord-004",
+      "faithfulness": 0.9091,
+      "decision_ok": true,
+      "accepted": true,
+      "sources": [
+        "corpus/orders.md",
+        "corpus/tools.md",
+        "corpus/overview.md",
+        "fixture://forge/orders",
+        "sql:orders",
+        "http_api:/orders/1001"
+      ],
+      "tools": [
+        "retrieve",
+        "web_search",
+        "sql_query",
+        "http_get"
+      ],
+      "critic_notes": "accepted cited evidence"
+    },
+    {
+      "id": "ord-006",
+      "faithfulness": 0.9091,
+      "decision_ok": true,
+      "accepted": true,
+      "sources": [
+        "corpus/orders.md",
+        "corpus/tools.md",
+        "corpus/overview.md",
+        "fixture://forge/orders",
+        "sql:orders",
+        "http_api:/orders/1001"
+      ],
+      "tools": [
+        "retrieve",
+        "web_search",
+        "sql_query",
+        "http_get"
+      ],
+      "critic_notes": "accepted cited evidence"
+    },
+    {
+      "id": "ord-007",
+      "faithfulness": 0.9091,
+      "decision_ok": true,
+      "accepted": true,
+      "sources": [
+        "corpus/orders.md",
+        "corpus/tools.md",
+        "corpus/overview.md",
+        "fixture://forge/orders",
+        "sql:orders",
+        "http_api:/orders/1001"
+      ],
+      "tools": [
+        "retrieve",
+        "web_search",
+        "sql_query",
+        "http_get"
+      ],
+      "critic_notes": "accepted cited evidence"
+    },
+    {
+      "id": "ord-008",
+      "faithfulness": 0.9091,
+      "decision_ok": true,
+      "accepted": true,
+      "sources": [
+        "corpus/orders.md",
+        "corpus/tools.md",
+        "corpus/overview.md",
+        "fixture://forge/orders",
+        "sql:orders",
+        "http_api:/orders/1001"
+      ],
+      "tools": [
+        "retrieve",
+        "web_search",
+        "sql_query",
+        "http_get"
+      ],
+      "critic_notes": "accepted cited evidence"
+    },
+    {
+      "id": "docs-001",
+      "faithfulness": 0.8,
+      "decision_ok": true,
+      "accepted": true,
+      "sources": [
+        "corpus/tools.md",
+        "corpus/orders.md",
+        "corpus/overview.md",
+        "fixture://forge/orders",
+        "sql:docs",
+        "http_api:/docs/overview"
+      ],
+      "tools": [
+        "retrieve",
+        "web_search",
+        "sql_query",
+        "http_get"
+      ],
+      "critic_notes": "accepted cited evidence"
+    },
+    {
+      "id": "docs-002",
+      "faithfulness": 0.8,
+      "decision_ok": true,
+      "accepted": true,
+      "sources": [
+        "corpus/tools.md",
+        "corpus/orders.md",
+        "corpus/overview.md",
+        "fixture://forge/orders",
+        "sql:docs",
+        "http_api:/docs/overview"
+      ],
+      "tools": [
+        "retrieve",
+        "web_search",
+        "sql_query",
+        "http_get"
+      ],
+      "critic_notes": "accepted cited evidence"
+    },
+    {
+      "id": "docs-003",
+      "faithfulness": 0.8,
+      "decision_ok": true,
+      "accepted": true,
+      "sources": [
+        "corpus/tools.md",
+        "corpus/orders.md",
+        "corpus/overview.md",
+        "fixture://forge/orders",
+        "sql:docs",
+        "http_api:/docs/overview"
+      ],
+      "tools": [
+        "retrieve",
+        "web_search",
+        "sql_query",
+        "http_get"
+      ],
+      "critic_notes": "accepted cited evidence"
+    },
+    {
+      "id": "docs-004",
+      "faithfulness": 0.8,
+      "decision_ok": true,
+      "accepted": true,
+      "sources": [
+        "corpus/tools.md",
+        "corpus/overview.md",
+        "corpus/orders.md",
+        "fixture://forge/orders",
+        "sql:docs",
+        "http_api:/docs/overview"
+      ],
+      "tools": [
+        "retrieve",
+        "web_search",
+        "sql_query",
+        "http_get"
+      ],
+      "critic_notes": "accepted cited evidence"
+    },
+    {
+      "id": "docs-005",
+      "faithfulness": 0.8,
+      "decision_ok": true,
+      "accepted": true,
+      "sources": [
+        "corpus/tools.md",
+        "corpus/orders.md",
+        "corpus/overview.md",
+        "fixture://forge/orders",
+        "sql:docs",
+        "http_api:/docs/overview"
+      ],
+      "tools": [
+        "retrieve",
+        "web_search",
+        "sql_query",
+        "http_get"
+      ],
+      "critic_notes": "accepted cited evidence"
+    },
+    {
+      "id": "docs-006",
+      "faithfulness": 0.8333,
+      "decision_ok": true,
+      "accepted": true,
+      "sources": [
+        "corpus/overview.md",
+        "corpus/tools.md",
+        "corpus/orders.md",
+        "fixture://forge/overview",
+        "fixture://forge/orders",
+        "sql:docs",
+        "http_api:/docs/overview"
+      ],
+      "tools": [
+        "retrieve",
+        "web_search",
+        "sql_query",
+        "http_get"
+      ],
+      "critic_notes": "accepted cited evidence"
+    },
+    {
+      "id": "note-001",
+      "faithfulness": 0.6667,
+      "decision_ok": true,
+      "accepted": true,
+      "sources": [
+        "corpus/tools.md",
+        "corpus/orders.md",
+        "corpus/overview.md",
+        "file:notes/run.txt"
+      ],
+      "tools": [
+        "retrieve",
+        "web_search",
+        "write_file"
+      ],
+      "critic_notes": "accepted cited evidence"
+    },
+    {
+      "id": "note-002",
+      "faithfulness": 0.6667,
+      "decision_ok": true,
+      "accepted": true,
+      "sources": [
+        "corpus/orders.md",
+        "corpus/tools.md",
+        "corpus/overview.md",
+        "file:notes/run.txt"
+      ],
+      "tools": [
+        "retrieve",
+        "web_search",
+        "write_file"
+      ],
+      "critic_notes": "accepted cited evidence"
+    },
+    {
+      "id": "rej-001",
+      "faithfulness": 0.0,
+      "decision_ok": false,
+      "accepted": true,
+      "sources": [
+        "corpus/orders.md",
+        "fixture://forge/orders",
+        "sql:orders",
+        "http_api:/orders/1001"
+      ],
+      "tools": [
+        "retrieve",
+        "web_search",
+        "sql_query",
+        "http_get"
+      ],
+      "critic_notes": "accepted cited evidence"
+    },
+    {
+      "id": "rej-002",
+      "faithfulness": 0.0,
+      "decision_ok": false,
+      "accepted": true,
+      "sources": [
+        "corpus/orders.md",
+        "fixture://forge/orders",
+        "sql:orders",
+        "http_api:/orders/1001"
+      ],
+      "tools": [
+        "retrieve",
+        "web_search",
+        "sql_query",
+        "http_get"
+      ],
+      "critic_notes": "accepted cited evidence"
+    },
+    {
+      "id": "rej-003",
+      "faithfulness": 0.0,
+      "decision_ok": false,
+      "accepted": true,
+      "sources": [
+        "corpus/orders.md",
+        "corpus/overview.md",
+        "corpus/tools.md"
+      ],
+      "tools": [
+        "retrieve",
+        "web_search"
+      ],
+      "critic_notes": "accepted cited evidence"
+    },
+    {
+      "id": "rej-014",
+      "faithfulness": 0.0,
+      "decision_ok": false,
+      "accepted": true,
+      "sources": [
+        "corpus/orders.md",
+        "corpus/overview.md",
+        "corpus/tools.md"
+      ],
+      "tools": [
+        "retrieve",
+        "web_search"
+      ],
+      "critic_notes": "accepted cited evidence"
+    },
+    {
+      "id": "rej-018",
+      "faithfulness": 0.0,
+      "decision_ok": false,
+      "accepted": true,
+      "sources": [
+        "corpus/orders.md",
+        "corpus/overview.md",
+        "corpus/tools.md"
+      ],
+      "tools": [
+        "retrieve",
+        "web_search"
+      ],
+      "critic_notes": "accepted cited evidence"
+    }
+  ]
+}
