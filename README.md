@@ -15,8 +15,8 @@ flowchart TD
   client[API client] --> api
   api --> gate[Promote gate]
   gate --> runs[RunService]
-  runs --> graph[LangGraph stub]
-  graph --> planner[Planner]
+  runs --> orchestrator[LangGraph stub]
+  orchestrator --> planner[Planner]
   planner --> worker[Worker]
   worker --> critic[Critic]
   worker --> tools[Stdio ToolClient]
